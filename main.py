@@ -1,8 +1,15 @@
 import LoxoneSearch
+import PowerLogicSearch
 
 LoxoneList = LoxoneSearch.Search()
+PowerLogicList = PowerLogicSearch.Search()
 
+print("Loxone Smart Home Devices Found")
+print("Ip\tVersion")
 for result in LoxoneList:
-    print("IP ADDR: " + result.ip)
-    print("VERSION: " + result.version)
-    print("")
+    print(result.ip + "\t" + result.version)
+
+print("PowerLogic Meters Found")
+print("Ip")
+for result in PowerLogicList:
+    print(result.ip)
