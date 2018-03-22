@@ -3,12 +3,20 @@ import shodan
 import re
 
 api = shodan.Shodan(Auth.KEY)
+
+Header = "Loxone Smart Home Server\nIp\tVersion Number\n"
+SearchString = 'Server: Loxone'
+FileName = "LoxoneSearchResult"
+
 class LoxoneResult:
     version = ""
     ip = ""
+    def printFormat(self):
+        return str('' + self.ip + "\t" + self.version + "\n")
 
-digit = ['0','1','2','3','4','5','6','7','8','9']
+
 def findDigit(inputString):
+    digit = ['0','1','2','3','4','5','6','7','8','9']
     for x in range(0,len(inputString)-1):
         for d in digit:
             if inputString[x] is d:
@@ -18,11 +26,9 @@ def Search():
     results = ''
     resultList = []
     try:
-        results = api.search('Server: Loxone',page=2)
-        #print('Results found %s' % results['total'])
+        results = api.search(SearchString,page=2)
         for result in results['matches']:
             r = LoxoneResult()
-            #print('IP: %s' % result['ip_str'])
             r.ip = result['ip_str']
             serverIndex = result['data'].find('Server:',0,len(result['data']))
             endIndex = result['data'].find("\n",serverIndex,len(result['data']))
