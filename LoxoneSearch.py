@@ -26,16 +26,20 @@ def Search():
     results = ''
     resultList = []
     try:
-        results = api.search(SearchString,page=2)
-        for result in results['matches']:
-            r = LoxoneResult()
-            r.ip = result['ip_str']
-            serverIndex = result['data'].find('Server:',0,len(result['data']))
-            endIndex = result['data'].find("\n",serverIndex,len(result['data']))
-            stringsearch = result['data'][serverIndex:endIndex:]
-            search = findDigit(stringsearch)
-            r.version = stringsearch[search::]
-            resultList.append(r)
+        results = api.search(SearchString,page=1)
+        pages = int((results['total'])/100)+1
+        for x in range(1,pages+1):
+            results = api.search(SearchString,page=x)
+            for result in results['matches']:
+                r = LoxoneResult()
+                r.ip = result['ip_str']
+                serverIndex = result['data'].find('Server:',0,len(result['data']))
+                endIndex = result['data'].find("\n",serverIndex,len(result['data']))
+                stringsearch = result['data'][serverIndex:endIndex:]
+                search = findDigit(stringsearch)
+                r.version = stringsearch[search::]
+                resultList.append(r)
+
     except (shodan.APIError, e):
         print ('Error: %s' % e)
     return resultList
